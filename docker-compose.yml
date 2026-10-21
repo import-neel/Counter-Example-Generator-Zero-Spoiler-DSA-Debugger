@@ -1,0 +1,27 @@
+version: "3.8"
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: counterexample-debugger-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - ENVIRONMENT=production
+      - LOG_LEVEL=INFO
+      - DATABASE_URL=sqlite:////app/data/counterexample_debugger.db
+      - DEFAULT_EXECUTION_TIMEOUT=2.0
+      - MAX_OUTPUT_BYTES=65536
+      - MAX_MEMORY_MB=128
+      - SANDBOX_MODE=local
+    volumes:
+      - backend-data:/app/data
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 100
+
+volumes:
+  backend-data:
