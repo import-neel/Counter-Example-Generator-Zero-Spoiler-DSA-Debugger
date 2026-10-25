@@ -12,6 +12,14 @@ class SubmissionCreateRequest(BaseModel):
     timeout: Optional[float] = Field(
         default=None, gt=0.0, le=10.0, description="Custom execution timeout in seconds"
     )
+    hint_level: int = Field(
+        default=1,
+        ge=1,
+        le=5,
+        description="Hint level from 1 to 5"
+    )
+    
+
 
 
 class SubmissionRunResponse(BaseModel):

@@ -17,6 +17,7 @@ from frontend.services.backend_client import (
 )
 
 
+
 # ==========================================
 # PAGE CONFIGURATION
 # ==========================================
@@ -82,39 +83,21 @@ hint_level = st.slider(
 # DEBUG BUTTON
 # ==========================================
 
-if st.button(
-    "🔍 Debug Code",
-    type="primary"
-):
+if st.button("Debug Code"):
+    response = debug_submission(
+        problem_id=problem["id"],
+        code=code,
+        language="python",
+        hint_level=hint_level
+    )
 
-    if not code.strip():
-
-        st.warning(
-            "Please enter your code first."
-        )
-
+    if response.get("status") == "error":
+        st.error(response.get("message", "Debugging failed."))
     else:
+        execution = response.get("result", {})
+        show_result(execution)
 
-        with st.spinner(
-            "Running debugger..."
-        ):
-
-            result = debug_submission(
-
-                problem_id=
-                    problem["id"],
-
-                language=
-                    "python",
-
-                code=
-                    code,
-
-                hint_level=
-                    hint_level
-            )
-
-
-        # Display result
-
-        show_result(result)
+        hint = response.get("hint")
+        if hint:
+            st.subheader(f"Hint Level {hint_level}")
+            st.info(hint)
